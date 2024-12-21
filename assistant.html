@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Legal Assistant Chat</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #3B82F6;
+            --background: #111827;
+            --chat-bg: #1F2937;
+        }
+
+        body {
+            background-color: var(--background);
+            color: white;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+
+        .chat-container {
+            background: linear-gradient(180deg, #1F2937 0%, #111827 100%);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .message-bubble {
+            max-width: 80%;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .user-message {
+            background-color: var(--primary);
+            border-radius: 20px 20px 0 20px;
+        }
+
+        .bot-message {
+            background-color: #374151;
+            border-radius: 20px 20px 20px 0;
+        }
+
+        .typing-indicator {
+            animation: blink 1s infinite;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes blink {
+            50% { opacity: 0.5; }
+        }
+
+        .chat-input {
+            background-color: #374151;
+            transition: all 0.3s ease;
+        }
+
+        .chat-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+        }
+
+        .action-button {
+            transition: all 0.2s ease;
+        }
+
+        .action-button:hover {
+            transform: scale(1.05);
+        }
+
+        .action-button:active {
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="bg-gray-800 p-4 shadow-lg">
+        <div class="max-w-4xl mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold">Legal AI Assistant</h1>
+                    <p class="text-sm text-gray-400">Online • Ready to help</p>
+                </div>
+            </div>
+            <button class="p-2 rounded-full hover:bg-gray-700">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Chat Area -->
+    <main class="flex-1 max-w-4xl mx-auto w-full p-4">
+        <div class="chat-container rounded-lg p-4 min-h-[600px] flex flex-col">
+            <!-- Messages -->
+            <div class="flex-1 overflow-y-auto space-y-4 mb-4" id="chat-messages">
+                <!-- Bot Welcome Message -->
+                <div class="flex items-start space-x-2">
+                    <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center">
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                        </svg>
+                    </div>
+                    <div class="message-bubble bot-message p-3">
+                        <p>Hello! I'm your AI Legal Assistant. How can I help you today?</p>
+                    </div>
+                </div>
+
+                <!-- Sample User Message -->
+                <div class="flex items-start justify-end space-x-2">
+                    <div class="message-bubble user-message p-3">
+                        <p>I need help with a property dispute matter.</p>
+                    </div>
+                </div>
+
+                <!-- Sample Bot Response -->
+                <div class="flex items-start space-x-2">
+                    <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center">
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                        </svg>
+                    </div>
+                    <div class="message-bubble bot-message p-3 space-y-2">
+                        <p>I'll help you with your property dispute. Could you please provide more details about:</p>
+                        <ul class="list-disc ml-4 space-y-1">
+                            <li>Nature of the property (residential/commercial)</li>
+                            <li>Type of dispute (boundary/ownership/tenant)</li>
+                            <li>Current status of the situation</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="border-t border-gray-700 pt-4">
+                <div class="relative">
+                    <input type="text" 
+                           placeholder="Type your message..." 
+                           class="chat-input w-full rounded-lg pl-4 pr-32 py-3 focus:outline-none"
+                    >
+                    <div class="absolute right-2 top-2 flex space-x-2">
+                        <button class="action-button p-2 rounded-full hover:bg-gray-600">
+                            <svg class="w-5 h-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/>
+                            </svg>
+                        </button>
+                        <button class="action-button p-2 rounded-full hover:bg-gray-600">
+                            <svg class="w-5 h-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/>
+                            </svg>
+                        </button>
+                        <button class="action-button p-2 rounded-full bg-blue-500 hover:bg-blue-600">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="mt-2 flex space-x-2">
+                    <button class="text-sm text-gray-400 hover:text-white transition-colors">Property Law</button>
+                    <button class="text-sm text-gray-400 hover:text-white transition-colors">Family Dispute</button>
+                    <button class="text-sm text-gray-400 hover:text-white transition-colors">Criminal Law</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Add basic interactivity
+        document.addEventListener('DOMContentLoaded', () => {
+            const input = document.querySelector('input');
+            const sendButton = document.querySelector('.bg-blue-500');
+            const chatMessages = document.getElementById('chat-messages');
+
+            const addMessage = (text, isUser) => {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `flex items-start ${isUser ? 'justify-end' : ''} space-x-2`;
+                
+                const message = `
+                    ${!isUser ? `
+                        <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                            </svg>
+                        </div>
+                    ` : ''}
+                    <div class="message-bubble ${isUser ? 'user-message' : 'bot-message'} p-3">
+                        <p>${text}</p>
+                    </div>
+                `;
+                
+                messageDiv.innerHTML = message;
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            };
+
+            const handleSend = () => {
+                const text = input.value.trim();
+                if (text) {
+                    addMessage(text, true);
+                    input.value = '';
+                    
+                    // Simulate bot response
+                    setTimeout(() => {
+                        addMessage('Thank you for your message. I\'m analyzing your legal query...', false);
+                    }, 1000);
+                }
+            };
+
+            sendButton.addEventListener('click', handleSend);
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    handleSend();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
